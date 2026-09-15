@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banz Problemas</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #172033;
+}
+
+header {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    padding: 28px 15px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+header p {
+    margin: 8px 0 0;
+    font-size: 15px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+select,
+input,
+button {
+    width: 100%;
+    padding: 13px;
+    border-radius: 9px;
+    border: 1px solid #cbd5e1;
+    font-size: 16px;
+    margin-bottom: 14px;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.example {
+    color: #64748b;
+    font-size: 14px;
+    margin-top: -5px;
+    margin-bottom: 15px;
+}
+
+#resultado {
+    display: none;
+}
+
+.step {
+    background: #f8fafc;
+    border-left: 5px solid #2563eb;
+    padding: 15px;
+    margin: 12px 0;
+    border-radius: 8px;
+}
+
+.step strong {
+    color: #1d4ed8;
+}
+
+.answer {
+    background: #dcfce7;
+    border-left: 5px solid #16a34a;
+    padding: 17px;
+    border-radius: 8px;
+    margin-top: 18px;
+}
+
+.error {
+    background: #fee2e2;
+    border-left: 5px solid #dc2626;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.hidden {
+    display: none;
+}
+
+.math {
+    font-family: "Times New Roman", serif;
+    font-size: 19px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🧮 Banz Problemas</h1>
+    <p>Resolutor de problemas matemáticos passo a passo</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<label for="tipo">Escolha o tipo de problema:</label>
+
+<select id="tipo" onchange="mostrarCampos()">
+    <option value="quadratica">Equação Quadrática</option>
+    <option value="inequacao">Inequação Quadrática</option>
+    <option value="exponencial">Equação Exponencial</option>
+    <option value="logaritmica">Equação Logarítmica</option>
+</select>
+
+<div id="quadraticaCampos">
+
+<label>Valor de a:</label>
+<input type="number" id="a" placeholder="Ex: 1">
+
+<label>Valor de b:</label>
+<input type="number" id="b" placeholder="Ex: -5">
+
+<label>Valor de c:</label>
+<input type="number" id="c" placeholder="Ex: 6">
+
+<p class="example">
+Exemplo: x² - 5x + 6 = 0 → a=1, b=-5, c=6
+</p>
+
+</div>
+
+<div id="inequacaoCampos" class="hidden">
+
+<label>Valor de a:</label>
+<input type="number" id="ia" placeholder="Ex: 1">
+
+<label>Valor de b:</label>
+<input type="number" id="ib" placeholder="Ex: -5">
+
+<label>Valor de c:</label>
+<input type="number" id="ic" placeholder="Ex: 6">
+
+<label>Sinal da inequação:</label>
+
+<select id="sinal">
+    <option value=">"> &gt; 0 </option>
+    <option value="<"> &lt; 0 </option>
+    <option value=">="> ≥ 0 </option>
+    <option value="<="> ≤ 0 </option>
+</select>
+
+<p class="example">
+Exemplo: x² - 5x + 6 &gt; 0
+</p>
+
+</div>
+
+<div id="exponencialCampos" class="hidden">
+
+<label>Base:</label>
+<input type="number" id="base" placeholder="Ex: 2">
+
+<label>Expoente com x:</label>
+<input type="number" id="coefX" placeholder="Coeficiente de x. Ex: 1">
+
+<label>Valor final:</label>
+<input type="number" id="valorExp" placeholder="Ex: 8">
+
+<p class="example">
+Exemplo: 2ˣ = 8
+</p>
+
+</div>
+
+<div id="logaritmicaCampos" class="hidden">
+
+<label>Base do logaritmo:</label>
+<input type="number" id="baseLog" placeholder="Ex: 10">
+
+<label>Valor do logaritmo:</label>
+<input type="number" id="valorLog" placeholder="Ex: 2">
+
+<p class="example">
+Exemplo: log₁₀(x) = 2
+</p>
+
+</div>
+
+<button onclick="resolver()">🔎 Resolver problema</button>
+
+</div>
+
+<div class="card" id="resultado">
+    <h2>📚 Resolução passo a passo</h2>
+    <div id="conteudo"></div>
+</div>
+
+</div>
+
+<footer>
+    Banz Problemas © 2026 — Ferramenta de apoio à Matemática
+</footer>
+
+<script>
+
+function mostrarCampos() {
+
+    let tipo = document.getElementById("tipo").value;
+
+    document.getElementById("quadraticaCampos")
+        .classList.add("hidden");
+
+    document.getElementById("inequacaoCampos")
+        .classList.add("hidden");
+
+    document.getElementById("exponencialCampos")
+        .classList.add("hidden");
+
+    document.getElementById("logaritmicaCampos")
+        .classList.add("hidden");
+
+    if (tipo === "quadratica") {
+        document.getElementById("quadraticaCampos")
+            .classList.remove("hidden");
+    }
+
+    if (tipo === "inequacao") {
+        document.getElementById("inequacaoCampos")
+            .classList.remove("hidden");
+    }
+
+    if (tipo === "exponencial") {
+        document.getElementById("exponencialCampos")
+            .classList.remove("hidden");
+    }
+
+    if (tipo === "logaritmica") {
+        document.getElementById("logaritmicaCampos")
+            .classList.remove("hidden");
+    }
+}
+
+
+function numero(n) {
+    if (Number.isInteger(n)) return n;
+    return Math.round(n * 100000) / 100000;
+}
+
+
+function resolver() {
+
+    let tipo = document.getElementById("tipo").value;
+    let conteudo = document.getElementById("conteudo");
+
+    document.getElementById("resultado").style.display = "block";
+
+    if (tipo === "quadratica") {
+        resolverQuadratica();
+    }
+
+    if (tipo === "inequacao") {
+        resolverInequacao();
+    }
+
+    if (tipo === "exponencial") {
+        resolverExponencial();
+    }
+
+    if (tipo === "logaritmica") {
+        resolverLogaritmica();
+    }
+}
+
+
+function resolverQuadratica() {
+
+    let a = parseFloat(document.getElementById("a").value);
+    let b = parseFloat(document.getElementById("b").value);
+    let c = parseFloat(document.getElementById("c").value);
+
+    let conteudo = document.getElementById("conteudo");
+
+    if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        conteudo.innerHTML =
+        '<div class="error">⚠️ Preencha todos os valores.</div>';
+        return;
+    }
+
+    if (a === 0) {
+        conteudo.innerHTML =
+        '<div class="error">⚠️ O valor de a não pode ser 0 em uma equação quadrática.</div>';
+        return;
+    }
+
+    let delta = b*b - 4*a*c;
+
+    let html = "";
+
+    html += `
+    <div class="step">
+    <strong>1. Identificar os coeficientes</strong><br><br>
+    a = ${a}<br>
+    b = ${b}<br>
+    c = ${c}
+    </div>
+    `;
+
+    html += `
+    <div class="step">
+    <strong>2. Calcular o discriminante Δ</strong><br><br>
+    Δ = b² - 4ac<br>
+    Δ = (${b})² - 4(${a})(${c})<br>
+    Δ = ${numero(delta)}
+    </div>
+    `;
+
+    if (delta > 0) {
+
+        let x1 = (-b + Math.sqrt(delta))/(2*a);
+        let x2 = (-b - Math.sqrt(delta))/(2*a);
+
+        html += `
+        <div class="step">
+        <strong>3. Aplicar a fórmula de Bhaskara</strong><br><br>
+        x = (-b ±
